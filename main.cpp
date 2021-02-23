@@ -148,11 +148,7 @@ int menuUsuarios(){
 					dificultad = menu();
 					if (dificultad < 4 && dificultad>0){
 						puntos_jugar = jugar(dificultad, caso);
-						if(caso == 1){
-							GuardarPartida(&match, dificultad, puntos_jugar, caso);
-						}else{
-							GuardarPartida(&match, dificultad, 0, caso);
-						}
+						GuardarPartida(&match, dificultad, puntos_jugar, caso);
                         // actualizacion de mejores partidas, ranking y mejores usuarios x nivel
 						partidaAUsuario(&match, &user);
                         ordenarPartidas(&user, dificultad);
@@ -222,7 +218,7 @@ int bAdyacentes(int x, int y, int tlx, int tly, bool Bombas[16][30]){
 	}
 	//centro abajo
 	if ( y == tly-1 && x < tlx-1 && x > 0 ){
-		resultado = Bombas[y][x - 1] + Bombas[y][x + 1] + Bombas[y - 1][x - 1] + Bombas[y - 1][x] + Bombas[y + 1][x - 1];
+		resultado = Bombas[y][x - 1] + Bombas[y][x + 1] + Bombas[y - 1][x - 1] + Bombas[y - 1][x] + Bombas[y - 1][x + 1];
 	}
 	//centro, tope y fondo izquierdo
 	if (x==0){
@@ -244,9 +240,6 @@ int bAdyacentes(int x, int y, int tlx, int tly, bool Bombas[16][30]){
 			resultado = Bombas[y - 1][x] + Bombas[y + 1][x] + Bombas[y][x - 1] + Bombas[y - 1][x - 1] + Bombas[y + 1][x - 1];
 		}
 	}
-	
-	
-	
 	return resultado;
 }
 bool acciones(int x, int y, char z, char Pantalla[16][30], bool Bombas[16][30], int tlX, int tlY){
@@ -254,7 +247,7 @@ bool acciones(int x, int y, char z, char Pantalla[16][30], bool Bombas[16][30], 
 	// matPant es la matriz que se muestra y matBomb es la matriz de las bombas.
 	bool devolver = true;
 	if (z=='D'){
-		if (Bombas[y-1][x-1]==true){
+		if (Bombas[y-1][x-1] == true){
 			devolver = false;
 		}
 		else{
@@ -365,6 +358,9 @@ int jugar (int dificultad, char &caso){
 	
 	while (NoPerdio && !Gano && SeQueda){
 		mostrarMatriz(tlX, tlY, Pantalla);
+		// borrar
+		mostrarBombas(tlX, tlY, Bombas);
+		
 		SeQueda = entradaPorTeclado(dificultad, coordX, coordY, accion, tlX, tlY);
 		if (SeQueda) {
 			if (dificultad != 3 || !(coordX > 48 && coordX < 53)) {

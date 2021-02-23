@@ -72,7 +72,7 @@ void crearUsuario(PDB database){
 			fgets(contrasena, 13, stdin);
 			for (int i=0; i<13; i++) if (contrasena[i]=='\n') contrasena[i] = '\0';
             cin.ignore(1000, '\n');
-			if (strlen(contrasena) > 0 && strlen(contrasena)<13){
+			if (strlen(contrasena) > 7 && strlen(contrasena)<13){
 				tamanoCorrecto = true;
 			}
 			while(esAlNum && cont<strlen(contrasena)-1){
@@ -364,8 +364,15 @@ DB AbrirBaseDeDatos(){
 //calcula puntos con el tiempo
 int calculoPTO(int tiempo){
 	int ret;
-	if (tiempo<=0) ret = 1000000;
-	else ret=60000/tiempo;
+	if (tiempo==0){
+		ret = 1000000;
+	}else{
+		if (tiempo < 0){
+			ret = 0;
+		}else{
+			ret = 60000 / tiempo;
+		}
+	}
 	return ret;
 }
 
