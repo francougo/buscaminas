@@ -144,20 +144,13 @@ int menuUsuarios(){
 					dificultad = menu();
 					if (dificultad < 4 && dificultad>0){
 						puntos_jugar = jugar(dificultad, caso);
-						cout<<"termina el juego."<<endl;
 						GuardarPartida(&match, dificultad, puntos_jugar, caso);
-						cout<<"se guardo partida"<<endl;
                         // actualizacion de mejores partidas, ranking y mejores usuarios x nivel
 						partidaAUsuario(&match, &user);
 						usuarioADB(user, &database, indiceU);
-						cout<<"partida a usuario."<<endl;
                         ordenarPartidas(&user, dificultad);
-						cout<<"ordenar partidas."<<endl;
                         OrdenarUsuarios(&database);
-						cout<<"ordenar usuarios."<<endl;
                         mejorXNiv(&database);
-						cout<<"mejor por nivel"<<endl;
-						system("pause");
 					}
 				} while (dificultad != 0);
 				devolver = 1;

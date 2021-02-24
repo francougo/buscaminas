@@ -91,6 +91,21 @@ void crearUsuario(PDB database){
 			}
 		}
 		system("pause");
+		Partida defecto;
+		defecto.puntaje = 0;
+		defecto.tipo = 'G';
+		defecto.dificultad = 1;
+		defecto.fecha.dia = 1;
+		defecto.fecha.mes = 1;
+		defecto.fecha.anyo = 1;
+		
+		
+		for (int i = 0; i<10; i++){
+			user.partidasfacil[i] = defecto;
+			user.partidasmedio[i] = defecto;
+			user.partidasdificil[i] = defecto;
+		}
+		
 		user.perdidas = 0;
 		user.ganadas = 0;
 		user.abandonos = 0;
@@ -686,17 +701,13 @@ void ordenarPartidas(PUsuario user, int dificultad){
                 case 1:
 				if (user -> tlfacil > 0){
 					for (int j=0;j<user->tlfacil;j++){
-						cout<<"bucle "<<j<<endl;
 							if (user->partidasfacil[j].puntaje > usrMax){
 									pIndex = j;
 									usrMax = user->partidasfacil[j].puntaje;
 							}
 					}
-					cout<<693<<endl;
 					aux = user->partidasfacil[pIndex];
-					cout<<695<<endl;
 					user->partidasfacil[pIndex] = user->partidasfacil[0];
-					cout<<697<<endl;
 					user->partidasfacil[0] = aux;
 				}
                 break;
@@ -744,6 +755,10 @@ void strFecha(char fecha[11], Fecha fech){
 }
 
 void usuarioADB (Usuario user, PDB database, int index){
+	cout<< user.partidasfacil[0].puntaje <<endl;
+	cout<< user.partidasmedio[0].puntaje << endl;
+	cout<< user.partidasdificil[0].puntaje << endl;
+	system("pause");
 	database -> usuarios[index] = user;
 }
 

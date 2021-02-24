@@ -33,7 +33,7 @@ typedef struct Usuario* PUsuario;
 struct DB{
 	Usuario usuarios[100];
 	int cantidad_usuarios = 0;
-    int mejorFacil, mejorMedio, mejorDificil;
+    	int mejorFacil, mejorMedio, mejorDificil;
 };
 
 typedef struct DB* PDB;
