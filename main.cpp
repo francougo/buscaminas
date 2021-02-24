@@ -65,17 +65,13 @@ int main(){
 }
 	
 int menuUsuarios(){
-	int opcion, devolver, dev, puntos_jugar, dificultad, QUsuarios, op_pto;
+	int opcion, devolver, dev, puntos_jugar, dificultad, QUsuarios, op_pto, indiceU;
 	char caso, op;
 	bool no_termino = true, sale;
 	DB database;
 	Partida match;
 	Usuario user;
 	database = AbrirBaseDeDatos();
-	QUsuarios = database.cantidad_usuarios;
-
-	database = AbrirBaseDeDatos();
-	
 	QUsuarios = database.cantidad_usuarios;
 	
 	while(no_termino){
@@ -141,19 +137,27 @@ int menuUsuarios(){
 	}
 	switch(dev){
 		case 1:
-			user = AbrirUsuario(&database, sale);
+			user = AbrirUsuario(&database, sale, indiceU);
 			if (!sale){
 				do {
 					system("CLS");
 					dificultad = menu();
 					if (dificultad < 4 && dificultad>0){
 						puntos_jugar = jugar(dificultad, caso);
+						cout<<"termina el juego."<<endl;
 						GuardarPartida(&match, dificultad, puntos_jugar, caso);
+						cout<<"se guardo partida"<<endl;
                         // actualizacion de mejores partidas, ranking y mejores usuarios x nivel
 						partidaAUsuario(&match, &user);
+						usuarioADB(user, &database, indiceU);
+						cout<<"partida a usuario."<<endl;
                         ordenarPartidas(&user, dificultad);
+						cout<<"ordenar partidas."<<endl;
                         OrdenarUsuarios(&database);
+						cout<<"ordenar usuarios."<<endl;
                         mejorXNiv(&database);
+						cout<<"mejor por nivel"<<endl;
+						system("pause");
 					}
 				} while (dificultad != 0);
 				devolver = 1;
@@ -195,11 +199,12 @@ int menuUsuarios(){
 			devolver = -1;
 			break;
 	}
+	
 	OrdenarUsuarios(&database);
 	guardarDB(&database);
 	return devolver;
 }
-		
+
 int bAdyacentes(int x, int y, int tlx, int tly, bool Bombas[16][30]){
 	//las coordenadas de un punto
 	//devuelve un entero con la cantidad de bombas adyacentes
@@ -358,8 +363,6 @@ int jugar (int dificultad, char &caso){
 	
 	while (NoPerdio && !Gano && SeQueda){
 		mostrarMatriz(tlX, tlY, Pantalla);
-		// borrar
-		mostrarBombas(tlX, tlY, Bombas);
 		
 		SeQueda = entradaPorTeclado(dificultad, coordX, coordY, accion, tlX, tlY);
 		if (SeQueda) {

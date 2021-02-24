@@ -192,9 +192,11 @@ void partidaAUsuario(PPartida match, PUsuario usr){
 		else if (match -> tipo == 'P') usr -> perd++;
 		else usr -> ab++;
 		int total = (usr -> gan) + (usr -> perd) + (usr -> ab);
-		usr -> ganadas = usr -> gan * 100.0 / total;	
-		usr -> perdidas = usr -> perd * 100.0 / total;
-		usr -> abandonos = usr -> ab * 100.0 / total;
+		if (total != 0){
+			usr -> ganadas = (usr -> gan * 100.0) / total;	
+			usr -> perdidas = (usr -> perd * 100.0) / total;
+			usr -> abandonos = (usr -> ab * 100.0) / total;
+		}
 		// guardado de partida
 		int menor_punt = 10000000, pos=-1;
 		if (match -> dificultad ==1){
@@ -279,7 +281,7 @@ void guardarDB(PDB database){
 }
 
 // busca un usuario por su nombre y contrasenia
-Usuario AbrirUsuario (PDB database, bool &sale){
+Usuario AbrirUsuario (PDB database, bool &sale, int &index){
 	Usuario user;
     PUsuario Puser;
 
@@ -293,12 +295,14 @@ Usuario AbrirUsuario (PDB database, bool &sale){
 			cout<<"Ingrese nombre de usuario: ";
 			cin >> ws;
 			fgets(nombre, 11, stdin);
-			for (int i=0; i<11; i++) if (nombre[i]=='\n') nombre[i] = '\0';
+			for (int j=0; j<11; j++) if (nombre[j]=='\n') nombre[j] = '\0';
             cin.ignore(1000, '\n');
 			while(!encontrado && cont < QU){
 				strcpy(n, (database->usuarios[cont].nombre));
-				if ((strcmp(nombre, n))==0) encontrado = true;
-				else cont++;
+				if ((strcmp(nombre, n))==0){
+					encontrado = true;
+					index = cont;
+				}else cont++;
 			}
 			if(!encontrado){
 				cout<<"Usuario inexistente."<<endl;
@@ -313,7 +317,7 @@ Usuario AbrirUsuario (PDB database, bool &sale){
 			cout<<"Ingrese su contrasena: ";
 			cin>>ws;
 			fgets(pwrd, 13, stdin);
-			for (int i=0; i<13; i++) if (pwrd[i]=='\n') pwrd[i] = '\0';
+			for (int j=0; j<13; j++) if (pwrd[j]=='\n') pwrd[j] = '\0';
             cin.ignore(1000, '\n');
 			if (strcmp(pwrd, p)==0) coincide = true;
 			else{
@@ -677,22 +681,27 @@ void mejorXNiv(PDB db){// setea los valores de mejores puntajes en db
 void ordenarPartidas(PUsuario user, int dificultad){
         // Coloca la partida con el mayor puntaje en el indice 0 de cada arreglo 
         Partida aux;
-        int pIndex, usrMax = 0;
-
+        int pIndex = 0, usrMax = 0;
         switch(dificultad){
                 case 1:
-                for (int j=0;j<user->tlfacil;j++){
-                        if (user->partidasfacil[j].puntaje > usrMax){
-                                pIndex = j;
-                                usrMax = user->partidasfacil[j].puntaje;
-                        }
-                }
-                aux = user->partidasfacil[pIndex];
-                user->partidasfacil[pIndex] = user->partidasfacil[0];
-                user->partidasfacil[0] = aux;
-        
+				if (user -> tlfacil > 0){
+					for (int j=0;j<user->tlfacil;j++){
+						cout<<"bucle "<<j<<endl;
+							if (user->partidasfacil[j].puntaje > usrMax){
+									pIndex = j;
+									usrMax = user->partidasfacil[j].puntaje;
+							}
+					}
+					cout<<693<<endl;
+					aux = user->partidasfacil[pIndex];
+					cout<<695<<endl;
+					user->partidasfacil[pIndex] = user->partidasfacil[0];
+					cout<<697<<endl;
+					user->partidasfacil[0] = aux;
+				}
                 break;
                 case 2:
+				if (user-> tlmedio > 0){
                 for (int j=0;j<user->tlmedio;j++){
                         if (user->partidasmedio[j].puntaje > usrMax){
                                 pIndex = j;
@@ -702,11 +711,11 @@ void ordenarPartidas(PUsuario user, int dificultad){
                 aux = user->partidasmedio[pIndex];
                 user->partidasmedio[pIndex] = user->partidasmedio[0];
                 user->partidasmedio[0] = aux;
-
-        
+				}
         
                 break;
                 case 3:
+				if (user-> tldificil > 0){
                 for (int j=0;j<user->tldificil;j++){
                         if (user->partidasdificil[j].puntaje > usrMax){
                                 pIndex = j;
@@ -716,6 +725,7 @@ void ordenarPartidas(PUsuario user, int dificultad){
                 aux = user->partidasdificil[pIndex];
                 user->partidasdificil[pIndex] = user->partidasdificil[0];
                 user->partidasdificil[0] = aux;
+				}
 
         }
 }
@@ -732,7 +742,10 @@ void strFecha(char fecha[11], Fecha fech){
         strcat(fecha, "/");
         strcat(fecha, anio);
 }
-		
+
+void usuarioADB (Usuario user, PDB database, int index){
+	database -> usuarios[index] = user;
+}
 
 
 

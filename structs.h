@@ -46,7 +46,7 @@ void obtenerFecha(Pfecha date);
 int QueMesEs(char mes[3]);
 void partidaAUsuario(PPartida match, PUsuario usr);
 void guardarDB(PDB database);
-Usuario AbrirUsuario (PDB database, bool &sale);
+Usuario AbrirUsuario (PDB database, bool &sale, int &index);
 DB AbrirBaseDeDatos();
 void OrdenarUsuarios (PDB database);
 void mejorXNiv(PDB db);
@@ -57,4 +57,4 @@ void Puntaje(int opcion, PDB);
 void encriptar(PUsuario user, bool encriptar);
 void crearPartidasArtificial (PUsuario user);
 void crearUsuariosArt(PDB db, int cantidad);
-
+void usuarioADB (Usuario user, PDB database, int index);
